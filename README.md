@@ -1,9 +1,9 @@
-# 请先clone 代码到本地，命令 clone xxxx.git
-# 安装 执行 npm install
-# 启动服务，需要启动后端express 服务和 前端 vue 服务，命令分别是 npm run start:server ； npm run start:vue
+#### 请先clone 代码到本地，命令 clone xxxx.git，最好是用ssh的方式[教程](https://www.jianshu.com/p/31cbbbc5f9fa)
+#### 安装 执行 npm install
+#### 启动服务，需要启动后端express 服务和 前端 vue 服务，命令分别是 npm run start:server ； npm run start:vue
 
 
-# 相关资料
+#### 相关资料
 
 
 1. 安装node 环境 [安装教程](https://www.runoob.com/nodejs/nodejs-install-setup.html)，安装 可以在命令行中看到，安装后，可以在命令行中看下 node -v 是否有输出，证明已经安装
