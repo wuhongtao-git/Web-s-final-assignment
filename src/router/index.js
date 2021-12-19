@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
-import test from '@/components/test'
+import loginPage from '@/pages/loginPage'
+import listPage from '@/pages/listPage'
 Vue.use(Router)
 
 export default new Router({
@@ -9,13 +9,18 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      name: 'index',
+      redirect: '/login'
     },
     {
-      path: '/test',
-      name: 'test',
-      component: test
+      path: '/login',
+      name: 'login',
+      component: loginPage
+    },
+    {
+      path: '/list',
+      name: 'list',
+      component: listPage
     }
   ]
 })

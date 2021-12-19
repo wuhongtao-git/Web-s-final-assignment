@@ -5,7 +5,7 @@
   "author": "wenxinwu <wenxinwu@tencent.com>",
   "private": true,
   "scripts": {
-    "start:server": "node ./bin/www",
+    "start:server": "node ./server/index.js",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start:vue": "npm run dev",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
@@ -19,6 +19,7 @@
     "connect-history-api-fallback": "^1.6.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "element-ui": "^2.15.7",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
