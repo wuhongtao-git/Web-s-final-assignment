@@ -7,7 +7,7 @@ create table session_table
 (
     user_id int(20) not null,
     create_time timestamp not null default current_timestamp,
-    session_id varchar(100) unique,
+    session_id varchar(100),
     login_time int(20) comment '登录开始时间，用户操作后刷新',
    primary key(user_id)
 )
@@ -29,6 +29,7 @@ drop table if exists message_table;
 create table message_table
 (
     message_id int(20) not null auto_increment,
+    user_id int(20) not null,
     create_time timestamp not null default current_timestamp,
     message text comment '消息体',
     primary key(message_id)

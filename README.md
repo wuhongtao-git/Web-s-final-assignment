@@ -43,3 +43,6 @@ ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '121212my
 flush privileges;
 
 ```
+
+#### 跨域问题解决
+1. 正常不会这么搞，为了快，先这么整吧   [教程](https://blog.csdn.net/zyj362633491/article/details/86540714)

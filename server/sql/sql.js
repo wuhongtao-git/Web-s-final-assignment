@@ -17,7 +17,7 @@ module.exports = {
           reject(err)
         } else {
           console.log('The solution is: ', rows[0].solution)
-          resolve(rows[0])
+          resolve(rows)
         }
       })
       connection.end()

@@ -17,7 +17,7 @@
   "dependencies": {
     "axios": "^0.24.0",
     "connect-history-api-fallback": "^1.6.0",
-    "cookie-parser": "~1.4.4",
+    "cookie-parser": "^1.4.6",
     "debug": "~2.6.9",
     "element-ui": "^2.15.7",
     "express": "~4.16.1",

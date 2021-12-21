@@ -3,10 +3,7 @@ var express = require('express')
 var path = require('path')
 var cookieParser = require('cookie-parser')
 var logger = require('morgan')
-
-var indexRouter = require('./routes/index')
-var userRouter = require('./routes/user')
-var testRouter = require('./routes/test')
+var {startRoute} = require('./routes')
 var app = express()
 
 // 实际上这里可以改掉，这个模板太丑
@@ -18,7 +15,7 @@ app.all('*', function (req, res, next) {
   res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With')
   res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
   res.header('X-Powered-By', ' 3.2.1')
-  req.method == 'OPTIONS' ? res.send(200) : next()
+  req.method === 'OPTIONS' ? res.send(200) : next()
 })
 app.use(logger('dev'))
 app.use(express.json())
@@ -26,15 +23,11 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
-// ----------------这两行被我们注释掉了-----------
-// app.use('/', indexRouter);
-// app.use('/users', usersRouter);
-// ---------------------------------------------
 //  提供路由服务
-app.use('/test', testRouter)
-app.use('/user', userRouter)
+// 提供路由服务前，搞一下登录态的自动续期，按理，是要有操作，自动续期
 
-// ----------------这三行是我们新添加的-----------
+startRoute(app)
+
 var history = require('connect-history-api-fallback')
 app.use(express.static(path.join(__dirname, 'dist')))
 app.use(history())
