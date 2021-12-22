@@ -8,7 +8,7 @@ create table session_table
     user_id int(20) not null,
     create_time timestamp not null default current_timestamp,
     session_id varchar(100),
-    login_time int(20) comment '登录开始时间，用户操作后刷新',
+    login_time varchar(100) comment '登录开始时间，用户操作后刷新',
    primary key(user_id)
 )
 CHARACTER SET=UTF8;
@@ -20,7 +20,7 @@ create table user_table
     create_time timestamp not null default current_timestamp,
     user_name VARCHAR(30) unique,
     user_type int(4) DEFAULT 0 comment '0: 游客， 1：真实用户',
-    password VARCHAR(12) unique,
+    password VARCHAR(12),
     primary key(user_id)
 )
 CHARACTER SET=UTF8;

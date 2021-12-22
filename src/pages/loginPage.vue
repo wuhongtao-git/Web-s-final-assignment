@@ -6,7 +6,7 @@
             <el-input v-model="name" clearable></el-input>
           </el-form-item>
           <el-form-item label="密码">
-            <el-input v-model="passworld" show-password ></el-input>
+            <el-input v-model="password" show-password ></el-input>
           </el-form-item>
           <el-form-item>
             <el-button @click="register">注册</el-button>
@@ -20,28 +20,27 @@
 
 <script>
 import axios from 'axios'
+import config from '@/config.js'
+axios.defaults.withCredentials = true
 export default {
   name: 'loginPage',
   data () {
     return {
       name: '',
-      passworld: ''
+      password: ''
     }
   },
   created () {
-    axios
-      .get('http://localhost:3000/test')
-      .then((res) => {
-        if (res.data && res.data.code === 0) {
-          this.msg = res.data.data.message
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    //
   },
   methods: {
     register () {
+      axios.get(`http://${config.serverPath}/user/register?userName=${this.name}&password=${this.password}`).then((res) => {
+        this.$router.push('/list')
+      })
+        .catch((err) => {
+          console.log(err)
+        })
       this.$router.push('/list')
     },
     login () {

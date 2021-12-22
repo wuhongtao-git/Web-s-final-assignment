@@ -5,18 +5,24 @@ const {sessionGenerator} = require('../sessionGenerator')
 router.get('/get', function (req, res, next) {
   const {userId} = req.query || {}
   return sql.getUser(userId).then(data => {
-    res.json({
-      code: 0,
-      data: {
-        userData: data
-      }
-    })
+    if (data) {
+      res.json({
+        code: 0,
+        data: {
+          userData: {user_name: data.user_name, user_type: data.user_type}
+        }
+      })
+    } else {
+      res.json({
+        code: -3,
+        data: {}
+      })
+    }
   })
 })
 router.get('/register', function (req, res, next) {
   const {userName, password} = req.query || {}
   return sql.getUserByUserName(userName).then(data => {
-    console.log('####### register', data)
     if (data) {
       // 重名
       res.json({
@@ -35,9 +41,9 @@ router.get('/register', function (req, res, next) {
           return sql.getSession(user_id).then(data => {
             if (data) {
               // 更新吧
-              return sql.updateSession({userId: user_id, sessionId, loginTime})
+              return sql.updateSession({userId: user_id, sessionId: session_id, loginTime})
             } else {
-              return sql.addSession({userId: user_id, sessionId, loginTime})
+              return sql.addSession({userId: user_id, sessionId: session_id, loginTime})
             }
           }).then(data => {
             // 15分钟失效？
@@ -71,9 +77,9 @@ router.get('/login', function (req, res, next) {
       return sql.getSession(user_id).then(data => {
         if (data) {
           // 更新吧
-          return sql.updateSession({userId: user_id, sessionId, loginTime})
+          return sql.updateSession({userId: user_id, sessionId: session_id, loginTime})
         } else {
-          return sql.addSession({userId: user_id, sessionId, loginTime})
+          return sql.addSession({userId: user_id, sessionId: session_id, loginTime})
         }
       }).then(data => {
         // 15分钟失效？

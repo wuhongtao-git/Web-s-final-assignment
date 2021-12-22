@@ -5,16 +5,17 @@ var cookieParser = require('cookie-parser')
 var logger = require('morgan')
 var {startRoute} = require('./routes')
 var app = express()
-
+const config = require('../config.default')
 // 实际上这里可以改掉，这个模板太丑
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jade')
 // 这里只有开发环境，为了跨域，互通
 app.all('*', function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Origin', `http://${config.vuePath}`)
   res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With')
   res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
   res.header('X-Powered-By', ' 3.2.1')
+  res.header('Access-Control-Allow-Credentials', 'true')
   req.method === 'OPTIONS' ? res.send(200) : next()
 })
 app.use(logger('dev'))
