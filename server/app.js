@@ -4,6 +4,7 @@ var path = require('path')
 var cookieParser = require('cookie-parser')
 var logger = require('morgan')
 var {startRoute} = require('./routes')
+var {autoUpdateSession} = require('./autoUpdateSession')
 var app = express()
 const config = require('../config.default')
 // 实际上这里可以改掉，这个模板太丑
@@ -26,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 //  提供路由服务
 // 提供路由服务前，搞一下登录态的自动续期，按理，是要有操作，自动续期
-
+autoUpdateSession(app)
 startRoute(app)
 
 var history = require('connect-history-api-fallback')

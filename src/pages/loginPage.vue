@@ -44,7 +44,13 @@ export default {
       this.$router.push('/list')
     },
     login () {
-
+      axios.get(`http://${config.serverPath}/user/login?userName=${this.name}&password=${this.password}`).then((res) => {
+        this.$router.push('/list')
+      })
+        .catch((err) => {
+          console.log(err)
+        })
+      this.$router.push('/list')
     },
     touristLogin () {
 

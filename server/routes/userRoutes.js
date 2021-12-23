@@ -63,12 +63,12 @@ router.get('/login', function (req, res, next) {
   const {userName, password} = req.query || {}
   return sql.getUserByUserNameAndPassword(userName, password).then(data => {
     if (!data) {
-      return {
+      res.json({
         code: -2,
         data: {
           message: '账号或密码错误'
         }
-      }
+      })
     } else {
       // 产生一个随机session，填充到数据库里边去，然后写到cookie里边
       const {user_id} = data
@@ -85,10 +85,10 @@ router.get('/login', function (req, res, next) {
         // 15分钟失效？
         res.cookie('user_id', `${user_id}`, {maxAge: 900000, httpOnly: true})
         res.cookie('session_id', `${session_id}`, {maxAge: 900000, httpOnly: true})
-        return {
+        res.json({
           code: 0,
           data: {}
-        }
+        })
       })
     }
   })
