@@ -20,15 +20,16 @@ router.get('/get', function (req, res, next) {
   })
 })
 
-router.get('/add', function (req, res, next) {
-  const {commentMessage, messageId, userId} = req.query || {}
-  if (!commentMessage || !messageId || !userId) {
+router.get('/add', async function (req, res, next) {
+  const {commentMessage, messageId} = req.query || {}
+  const userInfo = req.userInfo || {}
+  if (!commentMessage || !messageId || !userInfo.user_id) {
     res.json({
       code: -6,
       data: {}
     })
   }
-  return sql.addComment({commentMessage, messageId, userId}).then(data => {
+  return sql.addComment({commentMessage, messageId, userId: userInfo.user_id}).then(data => {
     res.json({
       code: 0,
       data: {}

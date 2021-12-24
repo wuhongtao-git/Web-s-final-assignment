@@ -35,22 +35,26 @@ export default {
   },
   methods: {
     register () {
-      axios.get(`http://${config.serverPath}/user/register?userName=${this.name}&password=${this.password}`).then((res) => {
-        this.$router.push('/list')
+      axios.get(`http://${config.serverPath}/user/register?userName=${this.name}&password=${this.password}`).then((data) => {
+        data = data.data
+        if (data.code === 0) {
+          this.$router.push('/list')
+        }
       })
         .catch((err) => {
           console.log(err)
         })
-      this.$router.push('/list')
     },
     login () {
-      axios.get(`http://${config.serverPath}/user/login?userName=${this.name}&password=${this.password}`).then((res) => {
-        this.$router.push('/list')
+      axios.get(`http://${config.serverPath}/user/login?userName=${this.name}&password=${this.password}`).then((data) => {
+        data = data.data
+        if (data.code === 0) {
+          this.$router.push('/list')
+        }
       })
         .catch((err) => {
           console.log(err)
         })
-      this.$router.push('/list')
     },
     touristLogin () {
 

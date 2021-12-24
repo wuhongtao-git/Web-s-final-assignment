@@ -1,71 +1,122 @@
 <template>
   <div class="list-container">
+    <div class="list-inner-container">
     <div class="list-list">
-      <div class="list-item" v-for="item in messageList" :key="item.id">
+      <div class="list-item" v-for="item in currMessageList" :key="item.message_id">
         <div class="list-item-message-container">
           <div class="list-item-message">{{item.message}}</div>
           <div class="list-item-action-group">
-            <i class="el-icon-edit" @click="onCommend(item)"></i>
+            <i class="el-icon-edit" @click="onShowComment(item)"></i>
             <i class="el-icon-star-off" @click="onCollect(item)"></i>
           </div>
         </div>
+        <template v-if="commentMessageId===item.message_id">
+          <div>
+            <el-input
+            type="textarea"
+            :rows="2"
+            placeholder="请输入内容"
+            v-model="commentMessage">
+          </el-input>
+          <el-button @click="onComment" type="primary" size="mini" style="margin-top:5px;">发表</el-button>
+          </div>
+          <div class="list-list-comment">
+            <div class="list-item-comment" v-for="item in commentList" :key="item.comment_id">
+              <div class="list-item-comment">{{item.comment_message}}</div>
+            </div>
+          </div>
+        </template>
 
-        <div v-if="commendIndex===item.id">
-          <el-input
-          type="textarea"
-          :rows="2"
-          placeholder="请输入内容"
-          v-model="commend">
-        </el-input>
-        <el-button type="primary" size="mini" style="margin-top:5px;">发表</el-button>
-        </div>
       </div>
     </div>
+    <el-pagination
+      layout="prev, pager, next"
+      :page-size="pageSize"
+      :current-page="currPageIndex"
+      :total="total"
+      @current-change="changePage">
+    </el-pagination>
+    </div>
+
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import config from '@/config.js'
+axios.defaults.withCredentials = true
 export default {
-  name: 'Test',
   data () {
     return {
       // {message: 123, isShowCommend:true,commendList: [], commend: ''},
       messageList: [],
-      commendIndex: -1,
-      listType: 'common' // 取值 common collect
+      commentMessageId: -1,
+      listType: 'common', // 取值 common collect
+      pageSize: 5,
+      total: 0,
+      currPageIndex: 0,
+      commentMessage: '',
+      commentList: []
     }
   },
-  created () {
-    axios
-      .get('http://localhost:3001/test')
-      .then((res) => {
-        if (res.data && res.data.code === 0) {
-          this.msg = res.data.data.message
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+  created () {},
+  mounted () {
+    this.getData()
   },
-  async mounted () {
-    this.messageList = await this.getData()
+  computed: {
+    currMessageList () {
+      let list = []
+      console.log(this.pageSize * this.currPageIndex, this.pageSize * (this.currPageIndex + 1))
+      list = this.messageList.slice(this.pageSize * this.currPageIndex, this.pageSize * (this.currPageIndex + 1))
+      return list
+    }
+  },
+  watch: {
+    currPageIndex () {
+      this.getData()
+    }
   },
   methods: {
-    async getData () {
-      // todo
-      const data = [
-        {message: 123, id: 1},
-        {message: 123, id: 2, isShowCommend: true, commendList: [], commend: ''},
-        {message: 123, id: 3},
-        {message: 123, id: 4}
-      ]
-      return data
+    getData () {
+      const offset = this.pageSize * this.currPageIndex
+      axios.get(`http://${config.serverPath}/message/get?offset=${offset}&limit=${this.pageSize}`).then((data) => {
+        data = data.data
+        if (data && data.code === 0) {
+          const list = data.data.list || []
+          this.messageList.splice(offset, this.pageSize, ...list)
+          this.$set(this, 'messageList', this.messageList)
+          this.total = data.data.total || 0
+        }
+      })
     },
-    onCommend (messageItem) {
-      this.commendIndex = messageItem.id
-      // todo
+    getCommentData () {
+      const offset = 0
+      axios.get(`http://${config.serverPath}/comment/get?offset=${offset}&limit=100&messageId=${this.commentMessageId}`).then((data) => {
+        data = data.data
+        if (data && data.code === 0) {
+          const list = data.data.list || []
+          this.$set(this, 'commentList', list)
+        }
+      })
     },
+    changePage (page) {
+      console.log(page - 1)
+      this.currPageIndex = page - 1
+    },
+    onShowComment (messageItem) {
+      this.commentMessageId = messageItem.message_id
+      this.commentList = []
+      this.getCommentData()
+    },
+    onComment (messageItem) {
+      axios.get(`http://${config.serverPath}/comment/add?commentMessage=${this.commentMessage}&messageId=${this.commentMessageId}`).then((data) => {
+        data = data.data
+        if (data && data.code === 0) {
+          this.getCommentData
+        }
+      })
+    },
+
     onCollect (messageItem) {
       // todo
     }
@@ -76,14 +127,19 @@ export default {
 <style scoped>
 .list-container {
     display: flex;
+    flex-direction: column;
     height:100%;
     width:100%;
     margin-top: 50px;
     margin-bottom: 50px;
-    justify-content: center;
+    align-items: center;
+  }
+  .list-inner-container {
+    height:100%;
+    width:80%;
   }
   .list-list {
-    width: 80%;
+    width: 100%;
     overflow-y: auto;
   }
   .list-item {
