@@ -22,14 +22,15 @@ router.get('/get', function (req, res, next) {
 
 router.get('/add', async function (req, res, next) {
   const {commentMessage, messageId} = req.query || {}
-  const userInfo = req.userInfo || {}
-  if (!commentMessage || !messageId || !userInfo.user_id) {
+  const {user_id: userId} = req.userInfo || {}
+  console.log('################# comment add', JSON.stringify(req.userInfo), userId)
+  if (!commentMessage || !messageId || !userId) {
     res.json({
       code: -6,
       data: {}
     })
   }
-  return sql.addComment({commentMessage, messageId, userId: userInfo.user_id}).then(data => {
+  return sql.addComment({commentMessage, messageId, userId}).then(data => {
     res.json({
       code: 0,
       data: {}
@@ -37,7 +38,8 @@ router.get('/add', async function (req, res, next) {
   })
 })
 router.get('/del', function (req, res, next) {
-  const {messageId, userId} = req.query || {}
+  const {messageId} = req.query || {}
+  const {user_id: userId} = req.userInfo || {}
   if (!userId || !messageId) {
     res.json({
       code: -5,

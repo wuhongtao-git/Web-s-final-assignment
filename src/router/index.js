@@ -21,6 +21,11 @@ export default new Router({
       path: '/list',
       name: 'list',
       component: listPage
+    },
+    {
+      path: '/collect',
+      name: 'collect',
+      component: listPage
     }
   ]
 })

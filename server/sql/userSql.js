@@ -16,7 +16,7 @@ module.exports = {
     const sql = `insert into user_table (user_name, password, user_type) values ('${userName}', '${password}', ${userType});`
     return sqlQuery(sql).then(data => data)
   },
-  updateUser ({userId, userName, password, userType}) {
+  updateUser ({userId, userName, password, userType }) {
     const sql = `update user_table set user_name='${userName}', password='${password}', user_type=${userType} where user_id=${userId} ;`
     return sqlQuery(sql).then(data => data)
   }

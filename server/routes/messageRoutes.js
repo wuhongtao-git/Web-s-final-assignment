@@ -15,7 +15,8 @@ router.get('/get', function (req, res, next) {
 })
 
 router.get('/getCollection', function (req, res, next) {
-  const {userId, offset, limit} = req.query || {}
+  const {offset, limit} = req.query || {}
+  const {user_id: userId} = req.userInfo || {}
   if (!userId) {
     res.json({
       code: -4,
@@ -33,7 +34,8 @@ router.get('/getCollection', function (req, res, next) {
   })
 })
 router.get('/add', function (req, res, next) {
-  const {message, userId} = req.query || {}
+  const {message} = req.query || {}
+  const {user_id: userId} = req.userInfo || {}
   if (!userId || !message) {
     res.json({
       code: -5,
@@ -48,7 +50,8 @@ router.get('/add', function (req, res, next) {
   })
 })
 router.get('/del', function (req, res, next) {
-  const {messageId, userId} = req.query || {}
+  const {messageId} = req.query || {}
+  const {user_id: userId} = req.userInfo || {}
   if (!userId || !messageId) {
     res.json({
       code: -5,

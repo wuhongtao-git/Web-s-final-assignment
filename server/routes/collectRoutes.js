@@ -2,7 +2,8 @@ var express = require('express')
 var router = express.Router()
 const sql = require('../sql')
 router.get('/get', function (req, res, next) {
-  const {userId, offset, limit} = req.query || {}
+  const {offset, limit} = req.query || {}
+  const {user_id: userId} = req.userInfo || {}
   if (!userId) {
     res.json({
       code: -5,
@@ -34,7 +35,8 @@ router.get('/get', function (req, res, next) {
 })
 
 router.get('/add', function (req, res, next) {
-  const {messageId, userId} = req.query || {}
+  const {messageId} = req.query || {}
+  const {user_id: userId} = req.userInfo || {}
   if (!messageId || !userId) {
     res.json({
       code: -6,
@@ -49,7 +51,8 @@ router.get('/add', function (req, res, next) {
   })
 })
 router.get('/del', function (req, res, next) {
-  const {collectId, userId} = req.query || {}
+  const {collectId} = req.query || {}
+  const {user_id: userId} = req.userInfo || {}
   if (!userId || !collectId) {
     res.json({
       code: -5,
