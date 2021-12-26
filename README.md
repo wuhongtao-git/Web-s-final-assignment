@@ -1,7 +1,12 @@
-#### 请先clone 代码到本地，命令 clone xxxx.git，最好是用ssh的方式[教程](https://www.jianshu.com/p/31cbbbc5f9fa)，[https 拉取方式改ssh](https://blog.csdn.net/yychuyu/article/details/80186783) 
-#### 安装 执行 npm install，不行的话，直接找队友要一个 ./node_modules 吧
-#### 启动mysql, 可参考下边【相关资料】【sql】
-#### 启动服务，需要启动后端express 服务和 前端 vue 服务，命令分别是 npm run start:server ； npm run start:vue
+#### 请按照一下步骤执行
+1. 请先clone 代码到本地，命令 clone xxxx.git，可以先用http的方式拉取，最好是用ssh的方式 [教程 如何生成SSH key](https://www.jianshu.com/p/31cbbbc5f9fa)，[教程 https 拉取方式改ssh](https://blog.csdn.net/yychuyu/article/details/80186783) 
+2.  安装 执行 npm install，不行的话，直接找队友要一个 ./node_modules 吧
+3.  启动mysql, 可参考下边【相关资料】【sql】
+4. 启动服务，需要启动后端express 服务和 前端 vue 服务，命令如下，端口配置 可以修改 conig.default.js
+```
+npm run start:server
+npm run start:vue
+```
 
 
 #### 相关资料
@@ -17,13 +22,13 @@
 
 
 #### sql
-###### 启动和停止命令
+1. 启动和停止命令
 ```
 // 请将mysql-dev 替换成自己的本地的service name
 net start mysql-dev
 net stop mysql-dev
 ```
-###### sql 配置 
+2.  sql 配置 
 所有的配置，都收敛到config.default.js， sql相关的是
 ```
 sqlHost: 'localhost',
@@ -32,7 +37,7 @@ sqlPassword: '121212mysql', // sqlUser 的密码
 sqlDatabase: 'database_1', //  本项目使用的是这个，不要换
 ```
 
-###### 创建表格和 插入一些测试数据，请先进入mysql 命令行工具
+3. 创建表格和 插入一些测试数据，请先进入mysql 命令行工具
 ```
 // 创建database 和 table，并执行下边的命令，请自行替换成自己本地路径
 \. E:\www\Web-s-final-assignment\server\sql\createSql.sql
