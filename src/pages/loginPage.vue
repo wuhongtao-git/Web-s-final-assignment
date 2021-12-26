@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="login-inner-container">
-        <el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
+        <el-form label-position="labelPosition" label-width="80px">
           <el-form-item label="账号">
             <el-input v-model="name" clearable></el-input>
           </el-form-item>
@@ -12,7 +12,7 @@
             <el-button @click="register">注册</el-button>
             <el-button @click="login">登录</el-button>
             <el-button @click="touristLogin">游客</el-button>
-        </el-form-item>
+          </el-form-item>
         </el-form>
     </div>
   </div>
@@ -38,10 +38,13 @@ export default {
       axios.get(`http://${config.serverPath}/user/register?userName=${this.name}&password=${this.password}`).then((data) => {
         data = data.data
         if (data.code === 0) {
-          this.$router.push('/list?listType=common')
+          this.$router.push('/list')
+        } else if (data.data.message) {
+          this.$message(data.data.message)
         }
       })
         .catch((err) => {
+          this.$message('未知错误')
           console.log(err)
         })
     },
@@ -49,15 +52,18 @@ export default {
       axios.get(`http://${config.serverPath}/user/login?userName=${this.name}&password=${this.password}`).then((data) => {
         data = data.data
         if (data.code === 0) {
-          this.$router.push('/list?listType=common')
+          this.$router.push('/list')
+        } else if (data.data.message) {
+          this.$message(data.data.message)
         }
       })
         .catch((err) => {
+          this.$message('未知错误')
           console.log(err)
         })
     },
     touristLogin () {
-      this.$router.push('/list?listType=common')
+      this.$router.push('/list')
     }
   }
 }

@@ -14,10 +14,10 @@ module.exports = {
   },
   getMessagesByUser (userId, offset = 0, limit = 20) {
     const sql = `select * from message_table where user_id=${userId} order by create_time desc limit ${limit} offset ${offset};`
-    return sqlQuery(sql).then(data => data[0])
+    return sqlQuery(sql).then(data => data)
   },
   getMessagesByUserTotal (userId) {
-    const sql = `select * from message_table where user_id=${userId};`
+    const sql = `select count(*) as count from message_table where user_id=${userId};`
     return sqlQuery(sql).then(data => data[0])
   },
   addMessage ({message, userId}) {

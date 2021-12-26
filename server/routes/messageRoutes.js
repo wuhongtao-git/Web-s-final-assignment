@@ -14,13 +14,24 @@ router.get('/get', function (req, res, next) {
   })
 })
 
-router.get('/getCollection', function (req, res, next) {
+router.get('/getMy', async function (req, res, next) {
   const {offset, limit} = req.query || {}
-  const {user_id: userId} = req.userInfo || {}
+  const {user_id: userId} = req.sessionInfo || {}
   if (!userId) {
     res.json({
-      code: -4,
-      data: {}
+      code: -1,
+      data: {
+        message: '请先登录账号'
+      }
+    })
+  }
+  const userInfo = await sql.getUser(userId)
+  if (userInfo.user_type !== 1) {
+    res.json({
+      code: -1,
+      data: {
+        message: '游客无法使用该功能'
+      }
     })
   }
   return Promise.all([sql.getMessagesByUser(userId, offset, limit), sql.getMessagesByUserTotal(userId)]).then(datas => {
@@ -33,13 +44,15 @@ router.get('/getCollection', function (req, res, next) {
     })
   })
 })
-router.get('/add', function (req, res, next) {
+router.get('/add', async function (req, res, next) {
   const {message} = req.query || {}
-  const {user_id: userId} = req.userInfo || {}
-  if (!userId || !message) {
+  const {user_id: userId} = req.sessionInfo || {}
+  if (!userId) {
     res.json({
-      code: -5,
-      data: {}
+      code: -1,
+      data: {
+        message: '请先登录账号'
+      }
     })
   }
   return sql.addMessage({message, userId}).then(data => {
@@ -49,13 +62,15 @@ router.get('/add', function (req, res, next) {
     })
   })
 })
-router.get('/del', function (req, res, next) {
+router.get('/del', async function (req, res, next) {
   const {messageId} = req.query || {}
-  const {user_id: userId} = req.userInfo || {}
-  if (!userId || !messageId) {
+  const {user_id: userId} = req.sessionInfo || {}
+  if (!userId) {
     res.json({
-      code: -5,
-      data: {}
+      code: -1,
+      data: {
+        message: '请先登录账号'
+      }
     })
   }
   return sql.delMessage({messageId, userId}).then(data => {
@@ -66,8 +81,10 @@ router.get('/del', function (req, res, next) {
       })
     } else {
       res.json({
-        code: -6,
-        data: {}
+        code: -1,
+        data: {
+          message: '服务器错误'
+        }
       })
     }
   })

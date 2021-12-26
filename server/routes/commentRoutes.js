@@ -5,8 +5,10 @@ router.get('/get', function (req, res, next) {
   const {messageId, offset, limit} = req.query || {}
   if (!messageId) {
     res.json({
-      code: -5,
-      data: {}
+      code: -1,
+      data: {
+        message: '服务器错误'
+      }
     })
   }
   return Promise.all([sql.getComments(messageId, offset, limit), sql.getCommentsTotal(messageId)]).then(datas => {
@@ -22,12 +24,22 @@ router.get('/get', function (req, res, next) {
 
 router.get('/add', async function (req, res, next) {
   const {commentMessage, messageId} = req.query || {}
-  const {user_id: userId} = req.userInfo || {}
-  console.log('################# comment add', JSON.stringify(req.userInfo), userId)
-  if (!commentMessage || !messageId || !userId) {
+  const {user_id: userId} = req.sessionInfo || {}
+  console.log('################# comment add', JSON.stringify(req.sessionInfo), userId)
+  if (!commentMessage || !messageId) {
     res.json({
-      code: -6,
-      data: {}
+      code: -1,
+      data: {
+        message: '服务器错误'
+      }
+    })
+  }
+  if (!userId) {
+    res.json({
+      code: -1,
+      data: {
+        message: '请先登录账号'
+      }
     })
   }
   return sql.addComment({commentMessage, messageId, userId}).then(data => {
@@ -39,11 +51,21 @@ router.get('/add', async function (req, res, next) {
 })
 router.get('/del', function (req, res, next) {
   const {messageId} = req.query || {}
-  const {user_id: userId} = req.userInfo || {}
-  if (!userId || !messageId) {
+  const {user_id: userId} = req.sessionInfo || {}
+  if (!messageId) {
     res.json({
-      code: -5,
-      data: {}
+      code: -1,
+      data: {
+        message: '服务器错误'
+      }
+    })
+  }
+  if (!userId) {
+    res.json({
+      code: -1,
+      data: {
+        message: '请先登录账号'
+      }
     })
   }
   return sql.delComment({messageId, userId}).then(data => {

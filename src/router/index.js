@@ -23,6 +23,11 @@ export default new Router({
       component: listPage
     },
     {
+      path: '/mylist',
+      name: 'mylist',
+      component: listPage
+    },
+    {
       path: '/collect',
       name: 'collect',
       component: listPage

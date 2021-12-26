@@ -1,5 +1,6 @@
 #### 请先clone 代码到本地，命令 clone xxxx.git，最好是用ssh的方式[教程](https://www.jianshu.com/p/31cbbbc5f9fa)，[https 拉取方式改ssh](https://blog.csdn.net/yychuyu/article/details/80186783) 
-#### 安装 执行 npm install
+#### 安装 执行 npm install，不行的话，直接找队友要一个 ./node_modules 吧
+#### 启动mysql, 可参考下边【相关资料】【sql】
 #### 启动服务，需要启动后端express 服务和 前端 vue 服务，命令分别是 npm run start:server ； npm run start:vue
 
 
@@ -15,24 +16,29 @@
 
 
 
-#### sql 命令
+#### sql
+###### 启动和停止命令
 ```
-// 不一定是叫做mysql-dev ，请用service name 替代 
+// 请将mysql-dev 替换成自己的本地的service name
 net start mysql-dev
 net stop mysql-dev
 ```
-#### sql 配置 
-所有的配置，都收敛到config.default.js ，请先配置参数；
-
-进入mysql 执行命令
+###### sql 配置 
+所有的配置，都收敛到config.default.js， sql相关的是
 ```
-// 请换成自己的本地项目的绝对地址
+sqlHost: 'localhost',
+sqlUser: 'root', // 如果不是root，请自行更换
+sqlPassword: '121212mysql', // sqlUser 的密码
+sqlDatabase: 'database_1', //  本项目使用的是这个，不要换
+```
+
+###### 创建表格和 插入一些测试数据，请先进入mysql 命令行工具
+```
+// 创建database 和 table，并执行下边的命令，请自行替换成自己本地路径
 \. E:\www\Web-s-final-assignment\server\sql\createSql.sql
-// 插入一条数据，作为测试  
-insert into user_table (user_name, password, user_type) values ('wenxinwu', '121212', 1);
-
+// 批量插入数据
+\. E:\www\Web-s-final-assignment\server\sql\testDataSql.sql
 ```
-当前只调了一个sql吐数据的接口： http://localhost:3001/user/get?userId=1
 ### sql 的坑
 1. sql 如果是最新版8.0 使用node链接 sql 会包错，可参考[文档](https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server) 这个项目使用以下方法修复：
 ```

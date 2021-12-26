@@ -4,6 +4,10 @@ module.exports = {
     const sql = `select * from collect_table where user_id=${userId} order by create_time desc limit ${limit} offset ${offset};`
     return sqlQuery(sql).then(data => data)
   },
+  getCollectByMessageId (messageId, userId) {
+    const sql = `select * from collect_table where user_id=${userId} and message_id=${messageId};`
+    return sqlQuery(sql).then(data => data[0])
+  },
   getCollectsTotal (userId) {
     const sql = `select count(*) as count from collect_table  where user_id=${userId};`
     return sqlQuery(sql).then(data => data && data[0])

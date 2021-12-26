@@ -3,7 +3,7 @@ var router = express.Router()
 const sql = require('../sql')
 const {sessionGenerator} = require('../sessionGenerator')
 router.get('/get', function (req, res, next) {
-  const {user_id: userId} = req.userInfo || {}
+  const {user_id: userId} = req.sessionInfo || {}
   return sql.getUser(userId).then(data => {
     if (data) {
       res.json({
@@ -14,8 +14,10 @@ router.get('/get', function (req, res, next) {
       })
     } else {
       res.json({
-        code: -3,
-        data: {}
+        code: -1,
+        data: {
+          message: '服务器错误'
+        }
       })
     }
   })
@@ -28,7 +30,7 @@ router.get('/register', function (req, res, next) {
       res.json({
         code: -1,
         data: {
-          message: '这个账号已被注册，请重新输入账号'
+          message: '该账号已被注册，请重新输入账号'
         }
       })
     } else {
@@ -47,7 +49,7 @@ router.get('/register', function (req, res, next) {
             }
           }).then(data => {
             // 15分钟失效？
-            res.cookie('user_id', `${user_id}`, {maxAge: 900000, httpOnly: true})
+            res.cookie('user_id', `${user_id}`, {maxAge: 2147483647, httpOnly: true})
             res.cookie('session_id', `${session_id}`, {maxAge: 900000, httpOnly: true})
             res.json({
               code: 0,
@@ -65,7 +67,7 @@ router.get('/login', function (req, res, next) {
   return sql.getUserByUserNameAndPassword(userName, password).then(data => {
     if (!data) {
       res.json({
-        code: -2,
+        code: -1,
         data: {
           message: '账号或密码错误'
         }
@@ -84,7 +86,7 @@ router.get('/login', function (req, res, next) {
         }
       }).then(data => {
         // 15分钟失效？
-        res.cookie('user_id', `${user_id}`, {maxAge: 900000, httpOnly: true})
+        res.cookie('user_id', `${user_id}`, {maxAge: 2147483647, httpOnly: true})
         res.cookie('session_id', `${session_id}`, {maxAge: 900000, httpOnly: true})
         res.json({
           code: 0,
@@ -99,7 +101,7 @@ router.get('/login', function (req, res, next) {
   return sql.getUserByUserNameAndPassword(userName, password).then(data => {
     if (!data) {
       res.json({
-        code: -2,
+        code: -1,
         data: {
           message: '账号或密码错误'
         }
@@ -118,7 +120,7 @@ router.get('/login', function (req, res, next) {
         }
       }).then(data => {
         // 15分钟失效？
-        res.cookie('user_id', `${user_id}`, {maxAge: 900000, httpOnly: true})
+        res.cookie('user_id', `${user_id}`, {maxAge: 2147483647, httpOnly: true})
         res.cookie('session_id', `${session_id}`, {maxAge: 900000, httpOnly: true})
         res.json({
           code: 0,
@@ -129,19 +131,19 @@ router.get('/login', function (req, res, next) {
   })
 })
 router.get('/logout', function (req, res, next) {
-  const {user_id: userId} = req.userInfo || {}
+  const {user_id: userId} = req.sessionInfo || {}
   if (!userId) {
-    res.cookie('user_id', '', {maxAge: 900000, httpOnly: true})
+    res.cookie('user_id', '', {maxAge: 2147483647, httpOnly: true})
     res.cookie('session_id', '', {maxAge: 900000, httpOnly: true})
     res.json({
-      code: -2,
+      code: -1,
       data: {
-        message: '已退出登录'
+        message: '该用户没有登录过，或登录态过期'
       }
     })
   }
   return sql.delSession({userId}).then(() => {
-    res.cookie('user_id', '', {maxAge: 900000, httpOnly: true})
+    res.cookie('user_id', '', {maxAge: 2147483647, httpOnly: true})
     res.cookie('session_id', '', {maxAge: 900000, httpOnly: true})
     res.json({
       code: 0,
